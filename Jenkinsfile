@@ -1,20 +1,26 @@
 pipeline {
-    agent any 
-    stages {
-        stage('Build') { 
-            steps {
-                echo "This is for testing only 1" 
-            }
-        }
-        stage('Test') { 
-            steps {
-               echo "This is for testing only 2"
-            }
-        }
-        stage('Deploy') { 
-            steps {
-                echo "This is for testing only 3"
-            }
-        }
+    agent any
+    tools {
+        maven 'maven363'
     }
-}
+    environment {
+        ITVERSITY = credentials('itversity')
+    }
+    stages {
+        stage('Compile') { 
+            steps {
+                sh 'cd SparkWordCount && mvn clean compile' 
+            }
+        }
+        stage('Unit Test') { 
+            steps {
+                sh 'cd SparkWordCount && mvn clean test'
+            }
+        }
+        stage('Package') { 
+            steps {
+                sh 'cd SparkWordCount && mvn clean package'
+            }
+        }
+		}
+		}
