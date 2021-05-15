@@ -1,10 +1,7 @@
 pipeline {
     agent any
     tools {
-        maven 'maven363'
-    }
-    environment {
-        ITVERSITY = credentials('itversity')
+        maven 'maven381'
     }
     stages {
         stage('Compile') { 
