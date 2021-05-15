@@ -1,49 +1,20 @@
 pipeline {
-    agent any
-    tools {
-        maven 'maven363'
-    }
-    environment {
-        ITVERSITY = credentials('itversity')
-    }
+    agent any 
     stages {
-        stage('Compile') { 
+        stage('Build') { 
             steps {
-                sh 'cd SparkWordCount && mvn clean compile' 
+                echo "This is for testing only 1" 
             }
         }
-        stage('Unit Test') { 
+        stage('Test') { 
             steps {
-                sh 'cd SparkWordCount && mvn clean test'
+               echo "This is for testing only 2"
             }
         }
-        stage('Package') { 
+        stage('Deploy') { 
             steps {
-                sh 'cd SparkWordCount && mvn clean package'
+                echo "This is for testing only 3"
             }
         }
-        stage('Deploy') {
-            parallel {
-                stage('gw02') {
-                    steps {
-                        sh 'sshpass -p $ITVERSITY_PSW ssh -o StrictHostKeyChecking=no $ITVERSITY_USR@gw02.itversity.com hostname'
-                        sh '''sshpass -p $ITVERSITY_PSW sftp -oBatchMode=no -b - $ITVERSITY_USR@gw02.itversity.com << !
-                           put SparkWordCount/target/SparkWordCount-1.0-SNAPSHOT.jar
-                           bye
-                        !'''
-                    }
-                }
-                stage('gw03') {
-                    steps {
-                        sh 'sshpass -p $ITVERSITY_PSW ssh -o StrictHostKeyChecking=no $ITVERSITY_USR@gw03.itversity.com hostname'
-                        sh '''sshpass -p $ITVERSITY_PSW sftp -oBatchMode=no -b - $ITVERSITY_USR@gw03.itversity.com << !
-                           put SparkWordCount/target/SparkWordCount-1.0-SNAPSHOT.jar
-                           bye
-                        !'''
-                    }
-                }
-            }
-        }       
     }
 }
-
